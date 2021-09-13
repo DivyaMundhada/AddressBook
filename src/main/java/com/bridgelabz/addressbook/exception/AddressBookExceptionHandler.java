@@ -2,6 +2,7 @@ package com.bridgelabz.addressbook.exception;
 
 import com.bridgelabz.addressbook.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -33,5 +34,11 @@ public class AddressBookExceptionHandler {
                 .collect(Collectors.toList());
         ResponseDTO responseDTO = new ResponseDTO("Exception while processing REST Request", errMsg);
         return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ResponseDTO> handleMethodDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        ResponseDTO responseDTO = new ResponseDTO("Duplicate Phone Number Entry!!!", exception.getMessage());
+        return new ResponseEntity<>(responseDTO, HttpStatus.LOCKED);
     }
 }

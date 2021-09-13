@@ -1,6 +1,7 @@
 package com.bridgelabz.addressbook.service;
 
 import com.bridgelabz.addressbook.dto.AddressBookDTO;
+import com.bridgelabz.addressbook.dto.StateAndCityDTO;
 
 import java.util.List;
 
@@ -13,4 +14,8 @@ public interface IAddressBookService  {
     AddressBookDTO updateAddressBook(int id, AddressBookDTO addressBookDTO);
 
     AddressBookDTO deleteAddressBook(int id);
+
+    List<StateAndCityDTO> getStateAndCityDetails();
+
+    AddressBookDTO getAddressDetailsByID(int id);
 }

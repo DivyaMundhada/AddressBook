@@ -9,19 +9,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @Slf4j
+@RequestMapping("/addressbook")
 public class AddressBookController {
 
     @Autowired
     private IAddressBookService iAddressBookService;
 
     //Ability to get all data from Address Book.
-    @GetMapping(value = "/addressbook")
+    @GetMapping(value = "/get")
     public ResponseEntity<ResponseDTO> getAddress() {
         log.info("Inside getAddress()");
         List<AddressBookDTO> addressbookList = iAddressBookService.getAddress();
@@ -30,7 +31,7 @@ public class AddressBookController {
     }
 
     //Ability to add data in Address Book.
-    @PostMapping(value = "/addressbook")
+    @PostMapping(value = "/add")
     public ResponseEntity<ResponseDTO> addAddressBook(@Valid @RequestBody AddressBookDTO addressBookDTO) {
         log.info("Inside addAddressBook()");
         AddressBookDTO addAddress = iAddressBookService.addAddressBook(addressBookDTO);
@@ -39,7 +40,7 @@ public class AddressBookController {
     }
 
     //Ability to update data in Address Book Using Id.
-    @PutMapping(value = "/addressbook")
+    @PutMapping(value = "/update")
     public ResponseEntity<ResponseDTO> updateAddressBook(@RequestParam(name = "id") int id,@Valid @RequestBody AddressBookDTO addressBookDTO) {
         log.info("Inside updateAddressBook()");
         AddressBookDTO updateAddress = iAddressBookService.updateAddressBook(id, addressBookDTO);
@@ -48,7 +49,7 @@ public class AddressBookController {
     }
 
     //Ability to Delete data from Address Book  using Id.
-    @DeleteMapping(value = "/addressbook")
+    @DeleteMapping(value = "/delete")
     public ResponseEntity<ResponseDTO> deleteAddressBook(@RequestParam(name="id") int id ){
         log.info("Inside deleteAddressBook()");
         AddressBookDTO deleteAddress = iAddressBookService.deleteAddressBook(id);
@@ -56,4 +57,17 @@ public class AddressBookController {
         return new ResponseEntity<>(responseDTO,HttpStatus.OK);
     }
 
+    @GetMapping(value = "/getById")
+    public ResponseEntity<ResponseDTO> getAddressDetailsByID(@RequestParam(name = "id") int id) {
+        log.info("Inside getAddressDetailsByID()");
+        AddressBookDTO addressBookDTO = iAddressBookService.getAddressDetailsByID(id);
+        ResponseDTO responseDTO = new ResponseDTO("Fetched Address Book Data by ID", addressBookDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getStateDetails")
+    public ResponseEntity<ResponseDTO> getStateDetails(){
+        ResponseDTO responseDTO = new ResponseDTO("Fetched all State Details", iAddressBookService.getStateAndCityDetails());
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
 }

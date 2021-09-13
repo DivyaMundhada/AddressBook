@@ -1,10 +1,12 @@
 package com.bridgelabz.addressbook.service;
 
 import com.bridgelabz.addressbook.dto.AddressBookDTO;
+import com.bridgelabz.addressbook.dto.StateAndCityDTO;
 import com.bridgelabz.addressbook.entity.AddressBook;
 import com.bridgelabz.addressbook.exception.AddressBookException;
 import com.bridgelabz.addressbook.repository.IAddressBookRepo;
 
+import com.bridgelabz.addressbook.repository.IStateAndCityRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +23,9 @@ public class AddressBookService implements IAddressBookService {
 
     @Autowired
     private IAddressBookRepo addressBookRepository;
+
+    @Autowired
+    private IStateAndCityRepo iStateAndCityRepo;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -66,5 +71,19 @@ public class AddressBookService implements IAddressBookService {
     private AddressBook findAddressBookById(int id) {
         return addressBookRepository.findById(id)
                 .orElseThrow(() -> new AddressBookException("No Details found for given id!!!"));
+    }
+
+    @Override
+    public List<StateAndCityDTO> getStateAndCityDetails() {
+        return iStateAndCityRepo.findAll().stream().map(state -> new StateAndCityDTO(state.getId(),
+                state.getState(), state.getCity())).collect(Collectors.toList());
+    }
+
+    @Override
+    public AddressBookDTO getAddressDetailsByID(int id) {
+        log.info("Inside getAddressDetailsByID()");
+        AddressBook addressBook = findAddressBookById(id);
+        AddressBookDTO addressBookResponse = modelMapper.map(addressBook, AddressBookDTO.class);
+        return addressBookResponse;
     }
 }
